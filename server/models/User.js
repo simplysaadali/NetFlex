@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     emailOTPExpires: {
         type: Date,
     },
+
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 export default mongoose.model("User", userSchema);
