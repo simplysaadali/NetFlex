@@ -18,8 +18,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        select: false, //It tells Mongoose: (add in controller like "+password")
-            // Don't return the password field when querying users by default. password is hidden but this query helps to show
+        select: false,
     },
 
     isEmailVerified: {

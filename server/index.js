@@ -2,10 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-// import mongoose from "mongoose";
 import connectDB from "./config/db.js"
-// import User from "./models/User.js";
-import cookieParser from "cookie-parser"; //with this, you can get cookie easily in backend, used as a middleware
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 
 import userRoutes from "./routes/userRoutes.js";

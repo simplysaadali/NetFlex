@@ -1,7 +1,6 @@
 import express from "express";
 import { login, logout, register } from "../controller/authController.js";
 import { verifyEmail } from "../controller/OtpVerificationController.js";
-// import User from "./models/User.js";
 
 const router = express.Router();
 

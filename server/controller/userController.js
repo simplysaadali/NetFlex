@@ -18,8 +18,6 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        // req.params.id actually equals _id: req.params.id
-        // .select() return only name and email in the response
         const user = await User.findById(req.params.id).select("name email");
         if(!user){
                 return res.status(404).json({
@@ -41,25 +39,6 @@ export const getUser = async (req, res) => {
         });
     }
 }
-
-//when there is register, why to post user
-
-// export const createUser = async (req, res) => {
-//     try {
-//         const user = await User.create(req.body);
-//         res.status(201).json({
-//             success: true,
-//             // message: "User Created Successfully",
-//             data: user,
-//         });
-//     } catch (error) {
-//         console.error("Error creating user: ", error);
-//         res.status(400).json({
-//             success: false,
-//             message: "Error creating user",
-//         });
-//     }
-// }
 
 export const updateUser = async (req, res) => {
     try {
