@@ -17,8 +17,12 @@ export const signToken = (user) => jwt.sign (
     }
 );
 
-export const publicUser = (u) => ({
-    _id: u._id,
-    name: u.name,
-    email: u.email,
-});
+export const publicUser = (user) => {
+  return {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar,
+    createdAt: user.createdAt,
+  };
+};

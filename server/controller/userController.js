@@ -1,88 +1,41 @@
-import User from "../models/User.js";
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+const publicUser = require("../utils/publicUser");
 
-export const getUsers = async (req, res) => {
-    try {
-        const users = await User.find().sort({ date: -1 });
-    res.status(200).json({
-        success: true,
-        data: users,
-    });
-    } catch (error) {
-        console.error("Error fetching users: ", error);
-        res.status(404).json({
-            success: false,
-            message: "Users not found",
-        });
+// @desc  Get logged-in user's profile
+// @route GET /api/users/profile
+const getProfile = async (req, res, next) => {
+  try {
+    res.json(publicUser(req.user));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc  Update logged-in user's profile
+// @route PUT /api/users/profile
+const updateProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-}
 
-export const getUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select("name email");
-        if(!user){
-                return res.status(404).json({
-                message: "User not found",
-                success: false,
-            })
-        }
+    user.name = req.body.name || user.name;
+    user.avatar = req.body.avatar || user.avatar;
 
-        res.status(200).json({
-            success: true,
-            data: user,
-        });
-
-    } catch (error) {
-        console.error("Error fetching user: ", error);
-        res.status(400).json({
-            success: false,
-            message: "Error fetching user"
-        });
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
     }
-}
 
-export const updateUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
+    const updatedUser = await user.save();
 
-        if(!user){
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-        res.status(200).json(user)
-    } catch (error) {
-        console.error("Error updating user: ", error)
-        res.status(500).json({
-            success: false,
-            message: "Error updating user",
-        });
-    }
-}
+    res.json(publicUser(updatedUser));
+  } catch (error) {
+    next(error);
+  }
+};
 
-export const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        if(!user){
-            return res.status(404).json({
-                success: false,
-                message: "User not found",
-            });
-        }else{
-                res.status(200).json({
-                success: true,
-                message: "User deleted successfully",
-            });
-        }
-    } catch (error) {
-        console.error("Error deleting user: ", error);
-        res.status(400).json({
-            success: false,
-            message: "Error deleting user",
-        });
-    }
-}
+module.exports = { getProfile, updateProfile };
