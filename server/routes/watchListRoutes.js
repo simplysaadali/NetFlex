@@ -1,14 +1,10 @@
-const express = require("express");
+import express from "express";
+import { addToWatchlist, getWatchlist, removeFromWatchlist } from "../controller/watchListController.js";
+import protect from "../middleware/authMiddleware.js";
 const router = express.Router();
-const {
-  getWatchlist,
-  addToWatchlist,
-  removeFromWatchlist,
-} = require("../controllers/watchlistController");
-const { protect } = require("../middleware/authMiddleware");
 
 router.get("/", protect, getWatchlist);
 router.post("/", protect, addToWatchlist);
 router.delete("/:movieId", protect, removeFromWatchlist);
 
-module.exports = router;
+export default router;
