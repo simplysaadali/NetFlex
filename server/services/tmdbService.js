@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const tmdb = axios.create({
   baseURL: process.env.TMDB_BASE_URL || "https://api.themoviedb.org/3",
@@ -46,7 +46,7 @@ const getSimilarMovies = async (id) => {
   return data.results;
 };
 
-module.exports = {
+export default {
   getTrending,
   getPopular,
   getTopRated,

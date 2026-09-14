@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import bcrypt from 'bcryptjs';
 import { signToken, cookieOption, publicUser } from "../utils/helper.js";
 import sendOTPEmail from "../utils/sendEmail.js"
+import sendResetEmail from "../utils/sendResetEmail.js";
 import crypto from "crypto";
 
 

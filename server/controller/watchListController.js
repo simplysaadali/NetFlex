@@ -1,4 +1,4 @@
-const Watchlist = require("../models/Watchlist");
+import Watchlist from "../models/watchList.js";
 
 const getWatchlist = async (req, res, next) => {
   try {
@@ -54,4 +54,4 @@ const removeFromWatchlist = async (req, res, next) => {
   }
 };
 
-module.exports = { getWatchlist, addToWatchlist, removeFromWatchlist };
+export { getWatchlist, addToWatchlist, removeFromWatchlist };

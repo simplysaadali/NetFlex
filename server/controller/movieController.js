@@ -1,4 +1,4 @@
-const tmdbService = require("../services/tmdbService");
+import tmdbService from "../services/tmdbService.js";
 
 const trending = async (req, res, next) => {
   try {
@@ -67,4 +67,4 @@ const similar = async (req, res, next) => {
   }
 };
 
-module.exports = { trending, popular, topRated, upcoming, search, details, similar };
+export { trending, popular, topRated, upcoming, search, details, similar };

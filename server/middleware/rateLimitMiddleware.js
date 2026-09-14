@@ -1,4 +1,4 @@
-const rateLimit = require("express-rate-limit");
+import rateLimit from "express-rate-limit";
 
 // Basic rate limiter to protect the API from abuse
 const apiLimiter = rateLimit({
@@ -9,4 +9,4 @@ const apiLimiter = rateLimit({
   message: { message: "Too many requests, please try again later." },
 });
 
-module.exports = apiLimiter;
+export default apiLimiter;

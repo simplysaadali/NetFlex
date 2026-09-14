@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const watchlistSchema = new mongoose.Schema(
   {
@@ -26,4 +26,4 @@ const watchlistSchema = new mongoose.Schema(
 // prevent the same user adding the same movie twice
 watchlistSchema.index({ user: 1, movieId: 1 }, { unique: true });
 
-module.exports = mongoose.model("Watchlist", watchlistSchema);
+export default mongoose.model("Watchlist", watchlistSchema);
