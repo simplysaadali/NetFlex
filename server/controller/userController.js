@@ -1,22 +1,20 @@
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
-const publicUser = require("../utils/publicUser");
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+import { publicUser } from "../utils/helper.js";
 
-// @desc  Get logged-in user's profile
-// @route GET /api/users/profile
-const getProfile = async (req, res, next) => {
+export const getProfile = async (req, res, next) => {
   try {
-    res.json(publicUser(req.user));
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(publicUser(user));
   } catch (error) {
     next(error);
   }
 };
 
-// @desc  Update logged-in user's profile
-// @route PUT /api/users/profile
-const updateProfile = async (req, res, next) => {
+export const updateProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -38,4 +36,45 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { getProfile, updateProfile };
+export const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.json(users.map(publicUser));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(publicUser(user));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: { name: req.body.name, avatar: req.body.avatar } },
+      { new: true, runValidators: true }
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(publicUser(user));
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ message: "User deleted" });
+  } catch (error) {
+    next(error);
+  }
+};
