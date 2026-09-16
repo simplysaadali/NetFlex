@@ -1,6 +1,6 @@
 <div align="center">
 
-# NetFlex
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=B91C1C&height=200&section=header&text=NetFlex&fontSize=70&fontColor=ffffff&animation=fadeIn"/>
 
 ### Discover your next favorite movie
 
@@ -140,3 +140,5 @@ ScreenShots/  README product screenshots
 ## Credits
 
 Movie data and imagery are provided by [TMDB](https://www.themoviedb.org/). NetFlex is a learning project and is not affiliated with Netflix or TMDB.
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=B91C1C&height=150&section=footer"/>
