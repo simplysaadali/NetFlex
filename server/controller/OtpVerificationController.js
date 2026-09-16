@@ -3,7 +3,8 @@ import { signToken, cookieOption, publicUser } from "../utils/helper.js";
 
 export const verifyEmail = async (req, res) => {
     try {
-        const { email, otp } = req.body;
+        const otp = String(req.body.otp ?? "").trim();
+        const email = String(req.body.email ?? "").trim().toLowerCase();
 
         // Check required fields
         if (!email || !otp) {

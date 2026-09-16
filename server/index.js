@@ -21,8 +21,6 @@ code.use(cookieParser());
 code.use(cors({ origin: "http://localhost:5173", credentials: true }));
 code.use("/api", apiLimiter);
 
-connectDB();
-
 code.get("/", (req, res) => res.send("API is running"));
 code.use("/api/auth", authRoutes);
 code.use("/api/users", userRoutes);
@@ -32,6 +30,16 @@ code.use("/api/movies", moviesRoutes);
 code.use(notFound);
 code.use(errorHandler);
 
-code.listen(PORT || 5000, () => {
-  console.log("Server running on port " + (PORT || 5000));
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    code.listen(PORT || 5000, () => {
+      console.log("Server running on port " + (PORT || 5000));
+    });
+  } catch (error) {
+    console.error("Unable to start server: database connection failed", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();

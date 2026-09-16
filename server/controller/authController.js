@@ -9,7 +9,9 @@ import crypto from "crypto";
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const name = String(req.body.name ?? "").trim();
+        const email = String(req.body.email ?? "").trim().toLowerCase();
+        const password = String(req.body.password ?? "");
 
         if(!email || !name || !password ){
             return res.status(400).json({
@@ -21,7 +23,7 @@ export const register = async (req, res) => {
         const findUser = await User.findOne({ email });
 
         if(findUser){
-            return res.json({
+            return res.status(409).json({
                 message: "Email already registered!"
             })
         }
@@ -40,7 +42,15 @@ export const register = async (req, res) => {
             isEmailVerified: false,
         });
 
-        await sendOTPEmail(email, otp);
+        try {
+            await sendOTPEmail(email, otp);
+        } catch (emailError) {
+            await User.deleteOne({ _id: user._id });
+            return res.status(503).json({
+                success: false,
+                message: emailError.message,
+            });
+        }
 
         return res.status(201).json({
             success: true,
@@ -60,7 +70,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { password } =  req.body;
+        const password = String(req.body.password ?? "");
         const email = String(req.body.email ?? "").trim().toLowerCase();
         const user = await User.findOne({ email }).select("+password");
 

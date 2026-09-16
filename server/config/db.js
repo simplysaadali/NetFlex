@@ -5,12 +5,8 @@ dotenv.config();
 
 async function connectDB (){
     const url = process.env.DB_URL;
-    try {
-        await mongoose.connect(url);
-        console.log("Connected to the DB successfully");
-    } catch (error) {
-        console.error("Error connecting to the Data Base: ", error);
-    }
+    await mongoose.connect(url, { serverSelectionTimeoutMS: 5000 });
+    console.log("Connected to the DB successfully");
 }
 
 export default connectDB;
