@@ -16,7 +16,8 @@ function Register() {
     setError("");
     try {
       await register(name, email, password);
-      navigate("/");
+      // Server requires OTP verification before login — go to verify page
+      navigate("/verify-email", { state: { email } });
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }

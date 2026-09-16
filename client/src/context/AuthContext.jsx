@@ -7,46 +7,50 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On first load, if a token exists, try to fetch the profile
+  // On first load, restore session using the httpOnly cookie
+  // (sent automatically by the browser — no localStorage needed)
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
     api
       .get("/users/profile")
       .then((res) => setUser(res.data))
-      .catch(() => {
-        localStorage.removeItem("token");
-        setUser(null);
-      })
+      .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
 
-  const login = async (email, password) => {
-    const res = await api.post("/auth/login", { email, password });
-    localStorage.setItem("token", res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
-  };
-
+  // Returns server response so Register page can redirect to verify-email with email
   const register = async (name, email, password) => {
     const res = await api.post("/auth/register", { name, email, password });
-    localStorage.setItem("token", res.data.token);
+    return res.data; // { success, message, userId }
+  };
+
+  // Called after OTP verification — server sets cookie and returns user
+  const verifyEmail = async (email, otp) => {
+    const res = await api.post("/auth/verify-email", { email, otp });
     setUser(res.data.user);
     return res.data.user;
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  // Login: server sets httpOnly cookie; response body has { user }
+  const login = async (email, password) => {
+    const res = await api.post("/auth/login", { email, password });
+    setUser(res.data.user);
+    return res.data.user;
+  };
+
+  // Logout: ask server to clear the cookie
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (_) {
+      // ignore network errors on logout
+    }
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading, login, register, verifyEmail, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+

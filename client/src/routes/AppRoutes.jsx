@@ -5,6 +5,7 @@ import MovieDetails from "../pages/MovieDetails.jsx";
 import Watchlist from "../pages/Watchlist.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
+import VerifyEmail from "../pages/VerifyEmail.jsx";
 import Profile from "../pages/Profile.jsx";
 import NotFound from "../pages/NotFound.jsx";
 import useAuth from "../hooks/useAuth.js";
@@ -28,6 +29,7 @@ function AppRoutes() {
       <Route path="/movie/:id" element={<MovieDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route
         path="/watchlist"
         element={
